@@ -52,7 +52,7 @@ action :create do
     install_key(new_resource.keyid, new_resource.keyserver)
   end
    execute"Creating mirror - #{new_resource.name}" do
-    command "aptly mirror create -filter-with-deps=true -dep-follow-recommends=true -dep-follow-all-variants=true -dep-follow-suggests=true -filter '#{new_resource.filter}' #{new_resource.name} #{new_resource.uri} #{new_resource.distribution} #{new_resource.component}"
+    command "aptly mirror create -filter-with-deps=#{new_resource.filterDeps} -filter '#{new_resource.filter}' #{new_resource.name} #{new_resource.uri} #{new_resource.distribution} #{new_resource.component}"
     user node['aptly']['user']
     group node['aptly']['group']
     environment aptly_env
@@ -79,4 +79,3 @@ action :drop do
     only_if %{ aptly mirror -raw list | grep ^#{new_resource.name}$ }
   end
 end
-
