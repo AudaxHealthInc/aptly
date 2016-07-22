@@ -51,8 +51,8 @@ action :create do
   elsif !new_resource.keyid.nil? && !new_resource.keyserver.nil?
     install_key(new_resource.keyid, new_resource.keyserver)
   end
-  execute "Creating mirror - #{new_resource.name}" do
-    command "aptly mirror create -filter '#{new_resource.filter}' #{new_resource.name} #{new_resource.uri} #{new_resource.distribution} #{new_resource.component}"
+   execute"Creating mirror - #{new_resource.name}" do
+    command "aptly mirror create #{new_resource.name} #{new_resource.uri} #{new_resource.distribution} #{new_resource.component}"
     user node['aptly']['user']
     group node['aptly']['group']
     environment aptly_env
@@ -70,6 +70,16 @@ action :update do
   end
 end
 
+action :updateFilter do
+  execute "Updating mirror filter - #{new_resource.name}" do
+    command "aptly mirror edit -filter-with-deps=#{new_resource.filterDeps} -filter '#{new_resource.filter}' #{new_resource.name}"
+    user node['aptly']['user']
+    group node['aptly']['group']
+    environment aptly_env
+    only_if %{ aptly mirror -raw list | grep ^#{new_resource.name}$ }
+  end
+end
+
 action :drop do
   execute "Droping mirror - #{new_resource.name}" do
     command "aptly mirror drop #{new_resource.name}"
@@ -79,4 +89,3 @@ action :drop do
     only_if %{ aptly mirror -raw list | grep ^#{new_resource.name}$ }
   end
 end
-

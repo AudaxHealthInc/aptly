@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-actions :create, :update, :drop
+actions :create, :update, :drop, :updateFilter
 default_action :create if defined?(default_action)
 
 # Needed for Chef versions < 0.10.10
@@ -34,3 +34,4 @@ attribute :keyid, :kind_of => String, :default => nil
 attribute :keyserver, :kind_of => String, :default => nil
 attribute :keyfile, :kind_of => String, :default => nil
 attribute :filter, :kind_of => String, :default => nil
+attribute :filterDeps, :kind_of => [TrueClass, FalseClass], :default => false
