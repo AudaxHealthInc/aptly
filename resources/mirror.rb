@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-actions :create, :update, :drop
+actions :create, :update, :drop, :updateFilter
 default_action :create if defined?(default_action)
 
 # Needed for Chef versions < 0.10.10
